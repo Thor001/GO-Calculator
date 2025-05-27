@@ -1,0 +1,20 @@
+{
+  "routes": [
+    {
+      "src": "/app/.*",
+      "dest": "/app/.*"
+    },
+    {
+      "src": "/sounds/.*",
+      "dest": "/sounds/.*"
+    },
+    {
+      "src": "/templates/.*",
+      "dest": "/templates/.*"
+    },
+    {
+      "src": "/.*",
+      "dest": "api/router.go"
+    }
+  ]
+}
