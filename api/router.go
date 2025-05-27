@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"handler/app"
 	"html/template"
-	"main/app"
 	"net/http"
 	"strconv"
 )
