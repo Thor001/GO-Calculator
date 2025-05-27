@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"net/http"
+	"scrap/app"
 	"strconv"
 )
 
@@ -41,10 +42,11 @@ func calculateHandler(w http.ResponseWriter, r *http.Request) {
 	h := (b * 0.08) * a
 	ha := h / 200
 	i := (b * a) / 1000
+	price, _ := app.Scrap()
 
 	w.Header().Set("Content-Type", "text/html")
 	w.Write([]byte(
-		"<p> Res picada  = " + format(c) + " gr" + "</p>" +
+		"<p> Res picada  = " + format(c) + " gr " + "| Precio: " + format(price) + "/kg | Total: $" + format(price*c/1000) + "</p>" +
 			"<p> Tocino picado  = " + format(d) + " gr" + "</p>" +
 			"<p> Jamon en cuadros  = " + format(e) + " gr" + "</p>" +
 			"<p> Salchicha para asar  = " + format(f) + " gr" + "</p>" +
