@@ -94,16 +94,45 @@
         font-size: 16px;
         color: #f82702;
       }
+      .input-group {
+        text-align: center;
+        margin-bottom: 1em;
+      }
+
+      .button-group button {
+        background-color: black;
+        color: #f82702;
+        border: 1px solid #f82702;
+        font-family: 'VT323', monospace;
+        font-size: 18px;
+        padding: 0.4em 0.8em;
+        margin: 0.25em;
+        cursor: pointer;
+        text-transform: uppercase;
+        box-shadow: 0 0 4px #f82702;
+        transition: background-color 0.2s, color 0.2s;
+      }
+
+      .button-group button:hover {
+        background-color: #f82702;
+        color: black;
+        box-shadow: 0 0 8px #f82702;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
     </style>
 </head>
 <body>
   <div class="container">
     <h1>Calculadora de Discada</h1>
     <div id="cactus" class="pixel-grid"></div>
-    <form hx-post="/calculate" hx-target="#result" hx-trigger="load, input delay:300ms">
+    <form hx-post="/calculate" hx-target="#result" hx-trigger="load,input from:#inputA, input from:#inputB, input delay:300ms">
       <div class="input-group">
-        <label for="a">Numero de Personas:</label><br>
-        <input type="number"  id="a" name="a" value="1" required>
+        <label for="inputA">Numero de Personas:</label><br>
+        <input type="number"  id="inputA" name="inputA" value="1" required>
         <div class="button-group">
           <button type="button" onclick="adjustA(-5)">-5</button>
           <button type="button" onclick="adjustA(-1)">-1</button>
@@ -113,13 +142,13 @@
       </div>
 
       <div class="input-group">
-        <label for="b">Gramos por Persona:</label><br>
-        <input type="number"  id="b" name="b" value="250" required>
+        <label for="inputB">Gramos por Persona:</label><br>
+        <input type="number"  id="inputB" name="inputB" value="250" required>
         <div class="button-group">
-          <button type="button" onclick="adjustB(-5)">-5</button>
-          <button type="button" onclick="adjustB(-1)">-1</button>
-          <button type="button" onclick="adjustB(1)">+1</button>
-          <button type="button" onclick="adjustB(5)">+5</button>
+          <button type="button" onclick="adjustB(-100)">-100</button>
+          <button type="button" onclick="adjustB(-50)">-50</button>
+          <button type="button" onclick="adjustB(50)">+50</button>
+          <button type="button" onclick="adjustB(100)">+100</button>
         </div>
       </div>
     </form>
@@ -222,12 +251,19 @@
     }, 600);
   </script>
   <script>
-    function adjustB(amount) {
+    function adjustA(amount) {
       const input = document.getElementById("inputA");
       let newVal = parseInt(input.value || 0) + amount;
       if (newVal < 0) newVal = 0;
       input.value = newVal;
       input.dispatchEvent(new Event("input")); // Trigger HTMX / listener
+      // Play sound
+      try {
+        beep.currentTime = 0;
+        beep.play();
+      } catch (e) {
+        console.log("Beep blocked by browser:", e);
+      }
     }
   </script>
   <script>
@@ -237,6 +273,13 @@
       if (newVal < 0) newVal = 0;
       input.value = newVal;
       input.dispatchEvent(new Event("input")); // Trigger HTMX / listener
+            // Play sound
+      try {
+        beep.currentTime = 0;
+        beep.play();
+      } catch (e) {
+        console.log("Beep blocked by browser:", e);
+      }
     }
   </script>
 </body>

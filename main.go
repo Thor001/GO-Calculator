@@ -23,8 +23,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func calculateHandler(w http.ResponseWriter, r *http.Request) {
-	aStr := r.FormValue("a")
-	bStr := r.FormValue("b")
+	aStr := r.FormValue("inputA")
+	bStr := r.FormValue("inputB")
 
 	a, errA := strconv.ParseFloat(aStr, 64)
 	b, errB := strconv.ParseFloat(bStr, 64)
