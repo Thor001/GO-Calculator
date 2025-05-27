@@ -1,11 +1,65 @@
 package handler
 
 import (
-	"handler/app"
+	"fmt"
 	"html/template"
 	"net/http"
+	"regexp"
 	"strconv"
+	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
+
+func Scrap() (float64, error) {
+	url := "https://alsuper.com/producto/pulpa-de-res-picada-357825"
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return 0, err
+	}
+	req.Header.Set("User-Agent", "Mozilla/5.0")
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		return 0, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != 200 {
+		return 0, fmt.Errorf("status code error: %d", res.StatusCode)
+	}
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return 0, err
+	}
+
+	var priceText string
+	doc.Find(".as-font-24").EachWithBreak(func(i int, s *goquery.Selection) bool {
+		text := strings.TrimSpace(s.Text())
+		if strings.Contains(text, "$") {
+			priceText = text
+			return false // break loop
+		}
+		return true
+	})
+
+	// Extract number from price string, e.g. "$139.90" → 139.90
+	re := regexp.MustCompile(`[0-9]+(?:\.[0-9]+)?`)
+	match := re.FindString(priceText)
+	if match == "" {
+		return 0, fmt.Errorf("no price found")
+	}
+
+	price, err := strconv.ParseFloat(match, 64)
+	if err != nil {
+		return 0, err
+	}
+
+	return price, nil
+}
 
 var tmpl = template.Must(template.ParseFiles("templates/index.html"))
 
@@ -42,7 +96,7 @@ func calculateHandler(w http.ResponseWriter, r *http.Request) {
 	h := (b * 0.08) * a
 	ha := h / 200
 	i := (b * a) / 1000
-	price, _ := app.Scrap()
+	price, _ := Scrap()
 
 	w.Header().Set("Content-Type", "text/html")
 	w.Write([]byte(
