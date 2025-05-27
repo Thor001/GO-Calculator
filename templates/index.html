@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+    <title>BIOS Ingredient Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+      .pixel-grid {
+        display: grid;
+        grid-template-columns: repeat(16, 10px);
+        grid-template-rows: repeat(16, 10px);
+        gap: 1px;
+        margin: 1em auto;
+        width: fit-content;
+      }
+
+      .pixel {
+        width: 8px;
+        height: 8px;
+        background-color: transparent;
+      }
+
+      .pixel.on {
+        background-color: #056405;
+
+      }
+      .pixel.brown {
+        background-color: #5A2D0C; /* Brown for base */
+      }
+      body {
+        margin: 0;
+        padding: 1em;
+        font-family: 'VT323', monospace;
+        background-color: #000000; /* BIOS dark blue */
+        color: #f82702; /* Green text */
+        font-size: 20px;
+      }
+
+      .bios-box {
+        border: 2px solid #f82702;
+        padding: 1em;
+        max-width: 600px;
+        margin: auto;
+        background-color: #000000;
+        
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 1em;
+        border-bottom: 1px dashed #f82702;
+        padding-bottom: 0.5em;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        align-items: center;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.3em;
+        text-align: center;
+      }
+
+      input[type="number"] {
+        background-color: #001000;
+        border: 1px solid #f82702;
+        color: #f82702;
+        font-family: 'VT323', monospace;
+        padding: 0.3em;
+        font-size: 20px;
+        text-align: center;
+        width: 100%;
+        max-width: 200px;
+      }
+
+      #result {
+        margin-top: 2em;
+        border-top: 1px dashed #f82702;
+        padding-top: 1em;
+        text-align: center;
+        white-space: pre-wrap;
+      }
+
+      .prompt {
+        text-align: center;
+        margin-top: 1em;
+        font-size: 16px;
+        color: #f82702;
+      }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de Discada</h1>
+    <div id="cactus" class="pixel-grid"></div>
+    <form hx-post="/calculate" hx-target="#result" hx-trigger="load, input delay:300ms">
+      <div class="input-group">
+        <label for="a">Numero de Personas:</label><br>
+        <input type="number"  id="a" name="a" value="1" required>
+        <div class="button-group">
+          <button type="button" onclick="adjustA(-5)">-5</button>
+          <button type="button" onclick="adjustA(-1)">-1</button>
+          <button type="button" onclick="adjustA(1)">+1</button>
+          <button type="button" onclick="adjustA(5)">+5</button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="b">Gramos por Persona:</label><br>
+        <input type="number"  id="b" name="b" value="250" required>
+        <div class="button-group">
+          <button type="button" onclick="adjustB(-5)">-5</button>
+          <button type="button" onclick="adjustB(-1)">-1</button>
+          <button type="button" onclick="adjustB(1)">+1</button>
+          <button type="button" onclick="adjustB(5)">+5</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="result">Loading...</div>
+    <div id="ubereats">
+
+      <h1>Buscar Ingredientes en Uber Eats (Tiendas)</h1>
+      <ul>
+        <li><a href="https://www.ubereats.com/search?q=Res%20picada&vertical=SHOP" target="_blank">Res picada</a></li>
+        <li><a href="https://www.ubereats.com/search?q=Tocino&vertical=SHOP" target="_blank">Tocino</a></li>
+        <li><a href="https://www.ubereats.com/search?q=Jamon%20Tradicional&vertical=SHOP" target="_blank">Jamón Tradicional</a></li>
+        <li><a href="https://www.ubereats.com/search?q=Salchicha%20para%20hacer&vertical=SHOP" target="_blank">Salchicha para asar</a></li>
+        <li><a href="https://www.ubereats.com/search?q=Chorizo&vertical=SHOP" target="_blank">Chorizo</a></li>
+        <li><a href="https://www.ubereats.com/search?q=Cebolla&vertical=SHOP" target="_blank">Cebolla</a></li>
+        <li><a href="https://www.ubereats.com/search?q=Cerveza%20Carta%20blanca&vertical=SHOP" target="_blank">Cerveza Carta blanca</a></li>
+        <li><a href="https://www.ubereats.com/search?q=Pure%20de%20tomate&vertical=SHOP" target="_blank">Puré de tomate</a></li>
+      </ul>
+    </div>
+  <div id="description">Pon la carne en el disco o sartén sin aceite por 20 minutos a fuego lento........</div>
+  </div>
+  <audio id="beep-sound" src="/sounds/beep.mp3" preload="auto"></audio>
+  <script>
+    const beep = document.getElementById("beep-sound");
+
+    document.addEventListener("input", function (event) {
+      if (event.target.tagName === "INPUT") {
+        // Restart audio if already playing
+        beep.currentTime = 0;
+        beep.play();
+      }
+    });
+  </script>
+  <script>
+    const cactusFrames = [
+      // Frame 1
+      [
+        "0000000111000000",
+        "0000011111110000",
+        "0100011111110000",
+        "1110011111110000",
+        "1110011111110000",
+        "1110011111110000",
+        "1111111111110000",
+        "0111111111110000",
+        "0000011111110000",
+        "0000011111110011",
+        "0000011111110011",
+        "0000011111111110",
+        "0000011111110000",
+        "0000011111110000",
+        "1111111111111111",
+        "1111111111111111"
+      ],
+      // Frame 2 (slightly raised arms)
+      [
+        "0000001110000000",
+        "0000111111100000",
+        "0000111111100010",
+        "0000111111100111",
+        "0000111111100111",
+        "0000111111100111",
+        "0000111111111111",
+        "0000111111111110",
+        "0000111111100000",
+        "1100111111100000",
+        "1100111111100000",
+        "0111111111100000",
+        "0000111111100000",
+        "0000111111100000",
+        "1111111111111111",
+        "1111111111111111"
+      ]
+    ];
+
+    const grid = document.getElementById("cactus");
+
+    function renderFrame(frame) {
+    grid.innerHTML = "";
+    frame.forEach((row, rowIndex) => {
+      for (let pixel of row) {
+        const div = document.createElement("div");
+        div.classList.add("pixel");
+        if (pixel === "1") {
+          if (rowIndex >= frame.length - 2) {
+            div.classList.add("brown");
+          } else {
+            div.classList.add("on");
+          }
+        }
+        grid.appendChild(div);
+      }
+    });
+  }
+
+    let frameIndex = 0;
+    setInterval(() => {
+      renderFrame(cactusFrames[frameIndex]);
+      frameIndex = (frameIndex + 1) % cactusFrames.length;
+    }, 600);
+  </script>
+  <script>
+    function adjustB(amount) {
+      const input = document.getElementById("inputA");
+      let newVal = parseInt(input.value || 0) + amount;
+      if (newVal < 0) newVal = 0;
+      input.value = newVal;
+      input.dispatchEvent(new Event("input")); // Trigger HTMX / listener
+    }
+  </script>
+  <script>
+    function adjustB(amount) {
+      const input = document.getElementById("inputB");
+      let newVal = parseInt(input.value || 0) + amount;
+      if (newVal < 0) newVal = 0;
+      input.value = newVal;
+      input.dispatchEvent(new Event("input")); // Trigger HTMX / listener
+    }
+  </script>
+</body>
+</html>
