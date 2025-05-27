@@ -1,9 +1,4 @@
-{
-  "functions": {
-    "api/router.go": {
-      "runtime": "go@1.0.0"
-    }
-  },
+{ 
   "routes": [
     {
       "src": "/(.*)",
