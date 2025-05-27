@@ -2,8 +2,8 @@ package main
 
 import (
 	"html/template"
+	"main/app"
 	"net/http"
-	"scrap/app"
 	"strconv"
 )
 
