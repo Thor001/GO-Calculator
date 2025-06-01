@@ -21,4 +21,4 @@
 go.work
 .vercel
 *.got
-/app
+/APP
