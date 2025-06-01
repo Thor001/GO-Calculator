@@ -61,11 +61,11 @@ func Scrap() (float64, error) {
 	return price, nil
 }
 
-var tmpl = template.Must(template.ParseFiles("api/templates/index.html"))
+var tmpl = template.Must(template.ParseFiles("templates/index.html"))
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 
-	http.Handle("/api/sounds/", http.StripPrefix("/api/sounds/", http.FileServer(http.Dir("sounds"))))
+	http.Handle("/sounds/", http.StripPrefix("/sounds/", http.FileServer(http.Dir("sounds"))))
 
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/calculate", calculateHandler)
