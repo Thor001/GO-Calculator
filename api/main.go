@@ -70,14 +70,14 @@ var tmpl *template.Template
 func Handler(w http.ResponseWriter, r *http.Request) {
 	// Parse templates from the embedded filesystem
 	var err error
-	tmpl, err = template.ParseFS(content, "templates/index.html")
+	tmpl, err = template.ParseFS(content, "../templates/index.html")
 	if err != nil {
 		// Log the error or panic; in a serverless function, panicking here
 		// means the function won't start correctly.
 		panic(err)
 	}
 
-	http.Handle("/sounds/", http.StripPrefix("/sounds/", http.FileServer(http.Dir("sounds"))))
+	http.Handle("/public/sounds/", http.StripPrefix("/public/sounds/", http.FileServer(http.Dir("sounds"))))
 
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/calculate", calculateHandler)
