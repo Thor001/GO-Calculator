@@ -12,8 +12,8 @@
       "dest": "/api/main.go"
     },
     {
-      "src": "/.*",
-      "dest": "/public/*"
+      "src": "/public/.*",
+      "dest": "/public/.*"
     }
   ]
 }
