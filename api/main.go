@@ -11,8 +11,8 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func Scrap() (float64, error) {
-	url := "https://alsuper.com/producto/pulpa-de-res-picada-357825"
+func Scrap(url string) (float64, error) {
+	//url := "https://alsuper.com/producto/pulpa-de-res-picada-357825"
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -97,17 +97,25 @@ func calculateHandler(w http.ResponseWriter, r *http.Request) {
 	h := (b * 0.08) * a
 	ha := h / 200
 	i := (b * a) / 1000
-	price, _ := Scrap()
+	priceres, _ := Scrap("https://alsuper.com/producto/pulpa-de-res-picada-357825")
+	pricetoc, _ := Scrap("https://alsuper.com/producto/tocineta-413218")
+	pricejam, _ := Scrap("https://alsuper.com/producto/jamon-de-pierna-5130264")
+	pricesal, _ := Scrap("https://alsuper.com/producto/salchicha-para-asar-238828")   //800gr
+	pricecho, _ := Scrap("https://alsuper.com/producto/chorizo-319544")               //100gr
+	priceceb, _ := Scrap("https://alsuper.com/producto/cebolla-blanca-924")           //250gr cu
+	pricecer, _ := Scrap("https://alsuper.com/producto/cerveza-six-pack-lata-323328") //six
 
 	w.Header().Set("Content-Type", "text/html")
 	w.Write([]byte(
-		"<p> Res picada  = " + format(c) + " gr " + "| Precio: " + format(price) + "/kg | Total: $" + format(price*c/1000) + "</p>" +
-			"<p> Tocino picado  = " + format(d) + " gr" + "</p>" +
-			"<p> Jamon en cuadros  = " + format(e) + " gr" + "</p>" +
-			"<p> Salchicha para asar  = " + format(f) + " gr" + "</p>" +
-			"<p> Chorizo   = " + format(g) + "</p>" +
-			"<p> Cebolla  = " + format(h) + " gr" + " o Cebolla grande: " + format(ha) + "</p>" +
-			"<p> Cerveza  = " + format(i) + " Latas</p>" +
+		"<p> Total Aproximado:" + format(priceres*c/1000+pricetoc*d/1000+pricejam*e/1000+pricesal*f/800+pricecho*g/100+priceceb*h/1000+pricecer*i/6) + "</p>" +
+
+			"<p> Res picada  = " + format(c) + " gr " + "| Precio: " + format(priceres) + "/kg | Total: $" + format(priceres*c/1000) + "</p>" +
+			"<p> Tocino picado  = " + format(d) + " gr" + "| Precio: " + format(pricetoc) + "/kg | Total: $" + format(pricetoc*d/1000) + "</p>" +
+			"<p> Jamon en cuadros  = " + format(e) + " gr" + "| Precio: " + format(pricejam) + "/kg | Total: $" + format(pricejam*e/1000) + "</p>" +
+			"<p> Salchicha para asar  = " + format(f) + " gr" + "| Precio: " + format(pricesal) + "/800gr | Total: $" + format(pricesal*f/800) + "</p>" +
+			"<p> Chorizo   = " + format(g) + "| Precio: " + format(pricecho) + "/100gr| Total: $" + format(pricecho*g/100) + "</p>" +
+			"<p> Cebolla  = " + format(h) + " gr" + " o Cebolla grande: " + format(ha) + "| Precio: " + format(priceceb) + "/kg | Total: $" + format(priceceb*h/1000) + "</p>" +
+			"<p> Cerveza  = " + format(i) + " Latas" + "| Precio: " + format(pricecer) + "/Six | Total: $" + format(pricecer*i/6) + "</p>" +
 			"<p> Pure de tomate / clamato / jugo V8 al gusto </p>",
 	))
 }
