@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"fmt"
@@ -63,7 +63,7 @@ func Scrap(url string) (float64, error) {
 
 var tmpl = template.Must(template.ParseFiles("../public/templates/index.html"))
 
-func main() {
+func Handler(w http.ResponseWriter, r *http.Request) {
 	// Parse templates from the embedded filesystem
 
 	http.Handle("/sounds/", http.StripPrefix("/sounds/", http.FileServer(http.Dir("sounds"))))
