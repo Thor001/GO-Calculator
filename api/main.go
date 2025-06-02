@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"embed"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -62,21 +61,10 @@ func Scrap() (float64, error) {
 	return price, nil
 }
 
-//go:embed templates/*
-var content embed.FS
-var tmpl *template.Template
-
-//var tmpl = template.Must(template.ParseFiles("templates/index.html"))
+var tmpl = template.Must(template.ParseFiles("public/templates/index.html"))
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	// Parse templates from the embedded filesystem
-	var err error
-	tmpl, err = template.ParseFS(content, "templates/index.html")
-	if err != nil {
-		// Log the error or panic; in a serverless function, panicking here
-		// means the function won't start correctly.
-		panic(err)
-	}
 
 	http.Handle("/public/sounds/", http.StripPrefix("/public/sounds/", http.FileServer(http.Dir("sounds"))))
 
